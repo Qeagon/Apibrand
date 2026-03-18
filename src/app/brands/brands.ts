@@ -1,35 +1,41 @@
-import { Component, OnInit } from '@angular/core';
-import { BrandService } from '../services/brand';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 @Component({
   selector: 'app-brands',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './brands.html',
   styleUrl: './brands.scss',
 })
-export class Brands implements OnInit { 
 
-  brands:any[] = [];
+export class Brands { 
 
-  constructor(private brandService: BrandService){}
+  brands = signal<any[]>([]);
+  isLoading = signal<boolean>(true);
 
-    ngOnInit(){
-      this.loadBrands();
-    }
+  apiKey = "ImetbBhiyi7IP_NSQvaAnF-MZW2CoOszpPk2UZR--PFF8BoLe6ZtOLHlSrh0POZjIMaQQlnp-x_ivi0pRKjHFw"
 
-    loadBrands(){
-
-      const brandList = ['google.com','nike.com','spotify.com'];
-
-      brandList.forEach(brand => {
-
-        this.brandService.getBrand(brand).subscribe(data => {
-          this.brands.push(data);
-        });
-
-      });
-
-    }
+  ngOnInit(){
+    this.loadBrands();
   }
 
+  async loadBrands(){
+    const brandList = ["google.com", "nike.com", "spotify.com"];
 
+    const promises = brandList.map(brand => 
+      fetch(`https://api.brandfetch.io/v2/brands/${brand}`, {
+        headers:{
+          Authorization: `Bearer ${this.apiKey}`
+        }
+      }).then(response => response.json())
+    );
+
+    const values = await Promise.all(promises);
+    
+    this.brands.set(values);
+    this.isLoading.set(false);
+  }
+
+ 
+}
