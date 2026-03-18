@@ -21,7 +21,7 @@ export class Brands {
   }
 
   async loadBrands(){
-    const brandList = ["google.com", "nike.com", "spotify.com"];
+    const brandList = ["google.com", "nike.com", "spotify.com", "github.com","slack.com"];
 
     const promises = brandList.map(brand => 
       fetch(`https://api.brandfetch.io/v2/brands/${brand}`, {
