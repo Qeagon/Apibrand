@@ -1,0 +1,27 @@
+<div class="brand-container">
+  @if(isLoading()) {
+    <p>Loading...</p>
+  }
+  @if(!isLoading() && brands().length > 0) {
+    @for(brand of brands(); track brand.id) {
+      <div class="brand-card">
+        <h2>{{brand.name}}</h2>
+        <img
+          [src]="brand.logos[1].formats[0].src"
+          width="120"
+          [alt]="brand.name"
+        >
+        <p>{{brand.description}}</p>
+        <div class="brand-colors">
+          @for(color of brand.colors; track color.hex) {
+            <div 
+              class="color-swatch"
+              [style.background-color]="color.hex"
+              [title]="color.hex"
+            ></div>
+          }
+        </div>
+      </div>
+    }
+  }
+</div>
